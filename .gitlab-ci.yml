@@ -1,0 +1,17 @@
+stages:
+  - test
+
+link-validation:
+  stage: test
+  image: node:22
+
+  before_script:
+    - npm install --global broken-link-checker
+
+  script:
+    - blc "https://storage01.dbe.academy/232.02.webdev/test-023.login/index.php" -ro
+    - blc "https://storage01.dbe.academy/232.02.webdev/test-023.login/contact.php" -ro
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
