@@ -1,7 +1,8 @@
 const { test, expect } = require('@playwright/test');
 // Live login attempts are excluded from CI. Never run this suite at high frequency.
+// Playwright forbids video/screenshot/trace test.use() overrides inside describe.
+test.use({ storageState: { cookies: [], origins: [] }, screenshot: 'off', trace: 'off', video: 'off' });
 test.describe('Negative live DBE login @live-login', () => {
-  test.use({ storageState: { cookies: [], origins: [] }, screenshot: 'off', trace: 'off', video: 'off' });
   test('Empty form does not open dashboard', async ({ page }) => {
     await page.goto('https://www.dbe.academy/auth/login/', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('input[name="identifier"]')).toBeVisible();
