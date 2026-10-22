@@ -1,5 +1,6 @@
 // Deterministic training API, NOT a real DBE Academy backend. Localhost only.
 const http = require('node:http');
+const { validateEvent } = require('../lib/qe-domain.cjs');
 const port = 43871;
 const events = [
  { id: 'ev-101', title: 'Demo training', date: '2026-10-22' },
@@ -43,8 +44,7 @@ http.createServer(async (req, res) => {
   if (req.method === 'POST' && url.pathname === '/api/events') {
     try {
       const b = await bodyOf(req);
-      if (typeof b.title !== 'string' || !b.title.trim() || typeof b.date !== 'string' ||
-          !/^\d{4}-\d{2}-\d{2}$/.test(b.date) || Number.isNaN(Date.parse(b.date + 'T00:00:00Z')))
+      if (validateEvent(b))
         return send(res, 422, { error: 'invalid_event' });
       return send(res, 201, { id: 'ev-created-demo', title: b.title, date: b.date });
     } catch { return send(res, 400, { error: 'invalid_json' }); }
