@@ -37,7 +37,9 @@ test.describe('QE Lab REST boundary and contract @ci', () => {
     expect(r.status()).toBe(404);
   });
   test('invalid JSON body 400',async({request})=>{
-    const r=await request.post(base+'/api/events',{data:'{broken',headers:{'content-type':'application/json'}});
+    // Buffer sends the malformed bytes as-is; Playwright JSON-encodes string data.
+    const r=await request.post(base+'/api/events',{data:Buffer.from('{broken','utf8'),headers:{'content-type':'application/json'}});
     expect(r.status()).toBe(400);
+    expect(await r.json()).toEqual({error:'invalid_json'});
   });
 });
