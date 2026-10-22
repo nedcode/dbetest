@@ -35,15 +35,47 @@ jobs:
         run: npm run security:check
       - name: Install exact npm dependencies
         run: npm ci
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Run public UI and local API tests only
+      - name: Install Chromium and Firefox
+        run: npx playwright install --with-deps chromium firefox
+      - name: Run deterministic local CI suites
         run: npm run test:ci
       - name: Upload HTML and JUnit reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dbe-playwright-report
+          path: |
+            dbe-playwright/playwright-report/
+            dbe-playwright/test-results/junit.xml
+          retention-days: 7
+          if-no-files-found: warn
+  external-smoke:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: dbe-playwright
+    env:
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: dbe-playwright/package-lock.json
+      - name: Install exact npm dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run public DBE smoke tests on demand
+        run: npm run test:external
+      - name: Upload external smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbe-external-smoke-report
           path: |
             dbe-playwright/playwright-report/
             dbe-playwright/test-results/junit.xml

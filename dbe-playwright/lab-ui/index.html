@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>QE Lab | Event workspace</title>
+  <link rel="stylesheet" href="/lab/styles.css">
+  <script src="/lab/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">Q</span>
+        <span>QE Lab</span>
+      </div>
+      <span class="environment">Local training application</span>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Controlled quality engineering lab</p>
+      <h1 id="page-title">Event workspace</h1>
+      <p class="intro-copy">Explore event creation, ownership, and audit feedback using fictional accounts and local data.</p>
+    </section>
+
+    <section id="login-view" class="surface auth-layout" aria-labelledby="login-heading">
+      <div class="auth-copy">
+        <p class="section-kicker">Step 01 / Access</p>
+        <h2 id="login-heading">Sign in to the lab</h2>
+        <p>Choose a fictional account to see how event ownership and permissions work.</p>
+        <div class="demo-hint" id="demo-hint">
+          <strong>Local demo accounts</strong>
+          <span>alice@example.test · bob@example.test · admin@example.test</span>
+          <span>Shared demo password: <code>demo-only</code></span>
+        </div>
+      </div>
+      <form id="login-form" class="form-card" aria-describedby="demo-hint">
+        <label for="identifier">Email address</label>
+        <input id="identifier" name="identifier" type="email" autocomplete="username" placeholder="alice@example.test" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+        <p id="login-feedback" class="feedback" role="alert" aria-live="assertive"></p>
+        <button id="login-button" type="submit" class="button button-primary">Sign in</button>
+      </form>
+    </section>
+
+    <section id="workspace-view" class="workspace" aria-labelledby="workspace-heading" hidden>
+      <div class="workspace-top surface">
+        <div>
+          <p class="section-kicker">Step 02 / Workspace</p>
+          <h2 id="workspace-heading" tabindex="-1">Events you can access</h2>
+          <p id="session-summary" class="muted"></p>
+        </div>
+        <button id="sign-out" type="button" class="button button-secondary">Sign out</button>
+      </div>
+
+      <div class="workspace-grid">
+        <section class="surface panel" aria-labelledby="create-heading">
+          <p class="section-kicker">Create</p>
+          <h3 id="create-heading">Plan an event</h3>
+          <p class="muted">A title and calendar date identify an event for your account.</p>
+          <form id="event-form">
+            <label for="event-title">Event title</label>
+            <input id="event-title" name="title" type="text" maxlength="100" placeholder="Release review" required>
+
+            <label for="event-date">Event date</label>
+            <input id="event-date" name="date" type="date" required>
+
+            <p id="event-feedback" class="feedback" role="status" aria-live="polite"></p>
+            <button id="create-button" type="submit" class="button button-primary">Create event</button>
+          </form>
+        </section>
+
+        <section class="surface panel" aria-labelledby="events-heading">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">Read</p>
+              <h3 id="events-heading">Event list</h3>
+            </div>
+            <button id="refresh-button" type="button" class="button button-text">Refresh</button>
+          </div>
+          <p id="events-summary" class="muted"></p>
+          <ul id="event-list" class="item-list" aria-label="Events"></ul>
+        </section>
+      </div>
+
+      <section class="surface panel audit-panel" aria-labelledby="audit-heading">
+        <p class="section-kicker">Trace</p>
+        <h3 id="audit-heading">Recent activity</h3>
+        <p class="muted">The local service records create and access decisions.</p>
+        <ul id="audit-list" class="item-list audit-list" aria-label="Recent activity"></ul>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">Fictional data only · Runs on localhost</footer>
+</body>
+</html>

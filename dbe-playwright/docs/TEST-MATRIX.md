@@ -1,16 +1,21 @@
-# Test inventory
+# Test matrix
 
-| Suite | Count | Scope | CI |
-|---|---:|---|---|
-| 01 public homepage | 1 | External public UI | Yes |
-| 02 Daniel | 1 | Private live session | No |
-| 03 negative login | 2 | External live login | No |
-| 04 calendar | 1 | Private live session | No |
-| 05 API | 9 | Local mock API | Yes |
-| 06 domain | 27 | Local domain functions | Yes |
-| 07 API boundaries | 17 | Local mock API | Yes |
-| 08 accessibility | 2 | External public UI | Yes |
-| 09 AI evaluation | 5 | Offline reference oracle | Yes |
-| **Total** | **65** | Mixed; do not equate mock coverage with DBE production | **61 CI** |
+Test counts are generated from the code, not maintained by hand. From `dbe-playwright/`, run `npm run test:list` to inspect the full inventory, or `npx playwright test --list --grep @ci --grep-invert @external` to inspect the deterministic CI selection. Playwright's list includes each configured browser project, so one test definition may appear more than once.
 
-Counts are derived from explicit test definitions. No real AI model is invoked. No live DBE security scanning is performed.
+| Suite | Target | Main assertions | Routine CI? |
+| --- | --- | --- | --- |
+| `01-public-homepage.spec.js` | Public DBE page | Reachability and visible body | No; `@external` |
+| `02-daniel-login.spec.js` | Private DBE session | Manual-session journey and screenshots | No |
+| `03-negative-login.spec.js` | Public DBE login form | Two low-volume rejection cases | No |
+| `04-calendar.spec.js` | Private DBE session | Calendar grid and day-label sanity | No |
+| `05-api.spec.js` | Local `/api/*` example | Basic HTTP contracts and errors | Yes |
+| `06-domain.spec.js` | Local domain functions | Dates, event validation, authorization helper, risk mapping | Yes |
+| `07-api-boundaries.spec.js` | Local `/api/*` example | Boundary values, malformed JSON `400`, valid invalid payload `422` | Yes |
+| `08-accessibility.spec.js` | Public DBE page | Title and declared language | No; `@external` |
+| `09-ai-evaluation.spec.js` | Offline oracle | Risk-classification mapping | Yes |
+| `10-lab-api.spec.js` | Stateful `/lab/api/*` | Session revocation, ownership, conflict, audit, validation | Yes |
+| `11-lab-ui.spec.js` | `/lab/` | User journey, sign-out revocation, visible errors, keyboard, axe checks and viewport behavior | Yes; Chromium desktop/mobile and Firefox |
+
+The external page checks are intentionally small: a title and language attribute do not prove accessibility. The local lab's automated accessibility checks also need human review with a keyboard and assistive technology before anyone can claim accessibility compliance. No test in this matrix validates DBE's private API or authorizes testing it.
+
+The root-level legacy Playwright/Python exercises in earlier Git revisions and the separate link-check workflow are outside this matrix. Older screenshots or reports are not evidence for the current CI run.

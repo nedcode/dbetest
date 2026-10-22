@@ -1,9 +1,0 @@
-﻿Testfall;Erwartetes Ergebnis;Tatsächliches Ergebnis;Status;Screenshot
-Login gültig;welcome.php und Login erfolgreich!;Erwartetes Ergebnis angezeigt;Bestanden;test_01_login_gueltig.png
-Login falsch;Ungültige Zugangsdaten!;Erwartetes Ergebnis angezeigt;Bestanden;test_02_login_falsch.png
-Login leer;Bitte alle Felder ausfüllen!;Erwartetes Ergebnis angezeigt;Bestanden;test_03_login_leer.png
-Navigation Kontakt;contact.php;Erwartetes Ergebnis angezeigt;Bestanden;test_04_navigation_kontakt.png
-Navigation Startseite;index.php;Erwartetes Ergebnis angezeigt;Bestanden;test_05_navigation_startseite.png
-Kontaktformular leer;Bitte Name und E-Mail eingeben!;Erwartetes Ergebnis angezeigt;Bestanden;test_06_kontakt_leer.png
-Kontakt E-Mail ungültig;Ungültige E-Mail!;Erwartetes Ergebnis angezeigt;Bestanden;test_07_kontakt_email_ungueltig.png
-Kontaktformular gültig;Nachricht erfolgreich gesendet!;Erwartetes Ergebnis angezeigt;Bestanden;test_08_kontakt_gueltig.png

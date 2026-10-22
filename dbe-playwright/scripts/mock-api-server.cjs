@@ -1,6 +1,9 @@
 // Deterministic training API, NOT a real DBE Academy backend. Localhost only.
 const http = require('node:http');
+const fs = require('node:fs/promises');
+const path = require('node:path');
 const { validateEvent } = require('../lib/qe-domain.cjs');
+const { createLabApi } = require('../lib/lab-api.cjs');
 const port = 43871;
 const events = [
  { id: 'ev-101', title: 'Demo training', date: '2026-10-22' },
@@ -13,14 +16,45 @@ function send(res, status, data) {
 }
 function bodyOf(req) {
   return new Promise((resolve, reject) => {
-    let raw = '';
-    req.on('data', c => { raw += c; if (raw.length > 10000) { reject(Error('large body')); req.destroy(); } });
-    req.on('end', () => { try { resolve(JSON.parse(raw || '{}')); } catch(e) { reject(e); } });
+    const chunks = [];
+    let size = 0;
+    let tooLarge = false;
+    req.on('data', chunk => {
+      if (tooLarge) return;
+      size += chunk.length;
+      if (size > 10_000) tooLarge = true;
+      else chunks.push(chunk);
+    });
+    req.on('end', () => {
+      if (tooLarge) { reject(Error('large body')); return; }
+      try {
+        const raw = new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks));
+        resolve(JSON.parse(raw || '{}'));
+      } catch (error) { reject(error); }
+    });
     req.on('error', reject);
   });
 }
+const handleLabApi = createLabApi({ send, bodyOf });
+const labAssets = {
+  '/lab/': ['index.html', 'text/html; charset=utf-8'],
+  '/lab/app.js': ['app.js', 'text/javascript; charset=utf-8'],
+  '/lab/styles.css': ['styles.css', 'text/css; charset=utf-8'],
+};
+async function serveLabAsset(res, asset) {
+  try {
+    const body = await fs.readFile(path.join(__dirname, '..', 'lab-ui', asset[0]));
+    res.writeHead(200, { 'content-type': asset[1], 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });
+    res.end(body);
+  } catch {
+    send(res, 404, { error: 'not_found' });
+  }
+}
 http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1:' + port);
+  if (req.method === 'GET' && labAssets[url.pathname])
+    return serveLabAsset(res, labAssets[url.pathname]);
+  if (await handleLabApi(req, res, url.pathname)) return;
   if (req.method === 'GET' && url.pathname === '/health')
     return send(res, 200, { status: 'ok', service: 'local-dbe-training-api' });
   if (req.method === 'GET' && url.pathname === '/api/events') {

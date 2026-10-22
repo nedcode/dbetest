@@ -5,7 +5,9 @@
   "description": "DBE Academy Playwright course — secure UI/API tests and CI",
   "scripts": {
     "test": "playwright test",
-    "test:ci": "playwright test --grep @ci",
+    "test:ci": "playwright test --grep @ci --grep-invert @external",
+    "test:external": "playwright test --grep @external",
+    "test:lab": "playwright test tests/10-lab-api.spec.js tests/11-lab-ui.spec.js",
     "test:api": "playwright test tests/05-api.spec.js",
     "test:negative": "playwright test tests/03-negative-login.spec.js",
     "test:calendar": "playwright test tests/04-calendar.spec.js",
@@ -19,6 +21,7 @@
     "test:list": "playwright test --list"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "1.63.0"
   }
 }

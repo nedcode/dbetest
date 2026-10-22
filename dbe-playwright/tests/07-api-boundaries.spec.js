@@ -42,4 +42,10 @@ test.describe('QE Lab REST boundary and contract @ci', () => {
     expect(r.status()).toBe(400);
     expect(await r.json()).toEqual({error:'invalid_json'});
   });
+  test('oversized JSON body returns 400 without resetting the connection',async({request})=>{
+    const body = Buffer.from(JSON.stringify({title:'a'.repeat(10_001),date:'2026-10-22'}));
+    const r = await request.post(base+'/api/events',{data:body,headers:{'content-type':'application/json'}});
+    expect(r.status()).toBe(400);
+    expect(await r.json()).toEqual({error:'invalid_json'});
+  });
 });

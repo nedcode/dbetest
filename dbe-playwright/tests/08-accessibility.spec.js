@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-test.describe('Public page accessibility smoke @ci',()=>{
+test.describe('Public page accessibility smoke @external',()=>{
   test('document has non-empty title',async({page})=>{
     await page.goto('https://www.dbe.academy/',{waitUntil:'domcontentloaded'});
     expect((await page.title()).trim().length).toBeGreaterThan(0);

@@ -19,7 +19,12 @@ module.exports = defineConfig({
     trace: 'retain-on-failure',
     headless: true,
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 600, height: 800 } } }],
+  projects: [
+    { name: 'chromium', testIgnore: /11-lab-ui\.spec\.js/, use: { ...devices['Desktop Chrome'], viewport: { width: 600, height: 800 } } },
+    { name: 'lab-chromium-desktop', testMatch: /11-lab-ui\.spec\.js/, use: { ...devices['Desktop Chrome'], baseURL: 'http://127.0.0.1:43871', viewport: { width: 1280, height: 800 } } },
+    { name: 'lab-chromium-mobile', testMatch: /11-lab-ui\.spec\.js/, use: { ...devices['Pixel 7'], baseURL: 'http://127.0.0.1:43871' } },
+    { name: 'lab-firefox', testMatch: /11-lab-ui\.spec\.js/, use: { ...devices['Desktop Firefox'], baseURL: 'http://127.0.0.1:43871', viewport: { width: 1280, height: 800 } } },
+  ],
   webServer: {
     command: 'node scripts/mock-api-server.cjs',
     url: 'http://127.0.0.1:43871/health',
