@@ -1,0 +1,15 @@
+# Never publish credentials, session cookies or personal screenshots
+.env
+.env.*
+!.env.example
+playwright/.auth/
+**/storage-state*.json
+**/auth-state*.json
+node_modules/
+test-results/
+playwright-report/
+screenshots/
+blob-report/
+*.har
+.dbe-upgrade-backups/
+.DS_Store

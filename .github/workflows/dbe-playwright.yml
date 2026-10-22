@@ -1,0 +1,51 @@
+name: DBE Playwright CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dbe-playwright/**'
+      - '.github/workflows/dbe-playwright.yml'
+  pull_request:
+    paths:
+      - 'dbe-playwright/**'
+      - '.github/workflows/dbe-playwright.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: dbe-playwright
+    env:
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: dbe-playwright/package-lock.json
+      - name: Prevent tracked credentials and private reports
+        run: npm run security:check
+      - name: Install exact npm dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run public UI and local API tests only
+        run: npm run test:ci
+      - name: Upload HTML and JUnit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbe-playwright-report
+          path: |
+            dbe-playwright/playwright-report/
+            dbe-playwright/test-results/junit.xml
+          retention-days: 7
+          if-no-files-found: warn

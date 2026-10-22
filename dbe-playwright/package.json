@@ -1,0 +1,24 @@
+{
+  "name": "dbe-academy-playwright-course",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DBE Academy Playwright course — secure UI/API tests and CI",
+  "scripts": {
+    "test": "playwright test",
+    "test:ci": "playwright test --grep @ci",
+    "test:api": "playwright test tests/05-api.spec.js",
+    "test:negative": "playwright test tests/03-negative-login.spec.js",
+    "test:calendar": "playwright test tests/04-calendar.spec.js",
+    "test:daniel": "playwright test tests/02-daniel-login.spec.js",
+    "auth:save": "node scripts/capture-session.cjs",
+    "security:check": "node tools/security-check.cjs",
+    "screenshots": "node scripts/daniel-screenshots.js",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "test:list": "playwright test --list"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}
