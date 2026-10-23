@@ -1,0 +1,12 @@
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+.env
+.env.*
+!.env.example
+playwright/.auth/
+*.har
+*.trace
+screenshots/
+.DS_Store

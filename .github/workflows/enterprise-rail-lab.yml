@@ -1,0 +1,42 @@
+name: Enterprise Rail Quality Lab
+on:
+  push:
+    paths:
+      - 'enterprise-rail-lab/**'
+      - '.github/workflows/enterprise-rail-lab.yml'
+  pull_request:
+    paths:
+      - 'enterprise-rail-lab/**'
+      - '.github/workflows/enterprise-rail-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: enterprise-rail-lab
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: enterprise-rail-lab/package-lock.json
+      - run: npm ci
+      - run: npm run test:unit
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ci
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enterprise-rail-quality-reports
+          path: |
+            enterprise-rail-lab/playwright-report/
+            enterprise-rail-lab/test-results/junit.xml
+          retention-days: 7
+          if-no-files-found: warn
