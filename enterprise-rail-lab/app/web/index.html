@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Northstar Rail — Quality Lab</title><link rel="stylesheet" href="/styles.css"></head>
+<body>
+<header><div class="brand"><span class="mark">✦</span> NORTHSTAR <strong>RAIL</strong><small>QUALITY ENGINEERING LAB</small></div><span class="pill">SYNTHETIC DEMO · NO REAL TICKETS</span></header>
+<main>
+<section class="hero"><div class="eyebrow">END-TO-END SYSTEM TESTING</div><h1>Rail journeys,<br><em>real quality checks.</em></h1><p>Explore a synthetic booking system powered by five independent local services. All users, seats, payments and tickets are fictional.</p></section>
+<div id="alert" role="alert" aria-live="polite" hidden></div>
+<section class="card" id="login-panel"><div class="section-title"><h2>01 &nbsp; Sign in</h2><span>Demo accounts only</span></div>
+<form id="login-form"><label for="email">Email</label><input id="email" type="email" value="alice@example.test" required autocomplete="off"><label for="password">Password</label><input id="password" type="password" value="demo-pass" required autocomplete="off"><button type="submit">Sign in</button></form><p class="hint">Try <code>alice@example.test</code>, <code>bob@example.test</code> or <code>support@example.test</code> with <code>demo-pass</code>.</p></section>
+<section id="workspace" hidden>
+<div class="welcome"><div><span class="eyebrow">AUTHENTICATED SESSION</span><h2 id="welcome-heading"></h2><span id="current-role" class="tag"></span></div><button class="secondary" id="sign-out">Sign out</button></div>
+<section class="card"><div class="section-title"><h2>02 &nbsp; Available journeys</h2><span>Inventory from catalog service</span></div><div id="journeys" class="journey-list" aria-label="Available journeys"></div><button class="tertiary" id="refresh-journeys">Refresh availability</button></section>
+<section class="card"><div class="section-title"><h2>03 &nbsp; My reservations</h2><span>Role-based access enforced by API</span></div><div id="bookings" aria-label="Reservations"></div></section>
+<section class="card"><div class="section-title"><h2>04 &nbsp; Notifications</h2><span>Ticket issuance events</span></div><div id="notifications" aria-label="Notifications"></div></section>
+</section>
+<footer>Northstar Rail is a fictional test application. No Deutsche Bahn integration. No payment processing.</footer>
+</main><script src="/app.js" defer></script>
+</body></html>

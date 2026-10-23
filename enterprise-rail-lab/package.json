@@ -1,0 +1,21 @@
+{
+  "name": "enterprise-rail-quality-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Synthetic railway booking system: multi-service contract, security, and Playwright E2E testing",
+  "scripts": {
+    "start": "node app/start.cjs",
+    "test": "playwright test",
+    "test:api": "playwright test tests/api.spec.js",
+    "test:ui": "playwright test tests/ui.spec.js",
+    "test:security": "playwright test tests/security.spec.js",
+    "test:ci": "playwright test --project=chromium",
+    "test:headed": "playwright test --headed",
+    "test:unit": "node --test app/shared/*.test.cjs",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  },
+  "engines": {"node": ">=22"}
+}
