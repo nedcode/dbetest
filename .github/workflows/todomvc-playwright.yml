@@ -1,0 +1,78 @@
+name: TodoMVC Playwright - AI Agent Generated Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dbe-playwright/tests/todomvc/**'
+      - 'dbe-playwright/specs/todomvc.md'
+      - 'dbe-playwright/playwright.config.js'
+      - 'dbe-playwright/package.json'
+      - 'dbe-playwright/package-lock.json'
+      - '.github/workflows/todomvc-playwright.yml'
+  pull_request:
+    paths:
+      - 'dbe-playwright/tests/todomvc/**'
+      - 'dbe-playwright/specs/todomvc.md'
+      - 'dbe-playwright/playwright.config.js'
+      - 'dbe-playwright/package.json'
+      - 'dbe-playwright/package-lock.json'
+      - '.github/workflows/todomvc-playwright.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  todomvc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: dbe-playwright
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Check whether generated TodoMVC tests are committed
+        id: detect
+        shell: bash
+        run: |
+          if [ -d tests/todomvc ] && [ -n "$(find tests/todomvc -maxdepth 1 -type f -name '*.spec.js' ! -name 'seed.spec.js' -print -quit)" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "Generated TodoMVC specs found"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "No generated TodoMVC specs committed yet; no tests run"
+          fi
+
+      - name: Configure Node.js
+        if: steps.detect.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: dbe-playwright/package-lock.json
+
+      - name: Install locked dependencies
+        if: steps.detect.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Install Chromium
+        if: steps.detect.outputs.ready == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run generated TodoMVC tests
+        if: steps.detect.outputs.ready == 'true'
+        run: npx playwright test tests/todomvc --project=chromium --grep-invert "seed:"
+
+      - name: Upload Playwright HTML and JUnit reports
+        if: always() && steps.detect.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: todomvc-playwright-report
+          path: |
+            dbe-playwright/playwright-report/
+            dbe-playwright/test-results/junit.xml
+          retention-days: 7
+          if-no-files-found: warn
